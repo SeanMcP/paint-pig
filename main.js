@@ -118,32 +118,57 @@
       case "g":
       case "b":
       case "p": {
+        event.preventDefault();
         color = COLORS[event.key];
         document.body.dataset.activeColor = event.key;
         break;
       }
       case "Escape": {
+        event.preventDefault();
         color = null;
         delete document.body.dataset.activeColor;
         break;
       }
       case "ArrowDown": {
+        event.preventDefault();
         move(0, -1);
         break;
       }
       case "ArrowLeft": {
+        event.preventDefault();
         move(-1, 0);
         break;
       }
       case "ArrowRight": {
+        event.preventDefault();
         move(1, 0);
         break;
       }
       case "ArrowUp": {
+        event.preventDefault();
         move(0, 1);
         break;
       }
+      case "R": {
+        event.preventDefault();
+        reset();
+        break;
+      }
     }
+  }
+
+  function reset() {
+    Object.values(MAP).forEach((cell) => {
+      if (cell.hsl) {
+        cell.blend = 0;
+        cell.hsl = "0, 0%, 100%";
+        cell.element.style.backgroundColor = `hsl(${cell.hsl})`;
+      }
+    });
+
+    color = null;
+    delete document.body.dataset.activeColor;
+    prevPosition = null;
   }
 
   document.addEventListener("keydown", (event) => {
