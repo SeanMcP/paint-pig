@@ -29,8 +29,8 @@
     );
   }, "");
 
-  gameEl.style.gridTemplateColumns = `repeat(${MAX.x}, 40px)`;
-  gameEl.style.gridTemplateRows = `repeat(${MAX.y}, 40px)`;
+  gameEl.style.gridTemplateColumns = `repeat(${MAX.x}, 50px)`;
+  gameEl.style.gridTemplateRows = `repeat(${MAX.y}, 50px)`;
 
   for (let y = MAX.y - 1; y >= 0; y--) {
     for (let x = 0; x < MAX.x; x++) {

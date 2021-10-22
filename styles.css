@@ -4,6 +4,47 @@ body {
   margin: 0;
 }
 
+header {
+  text-align: center;
+  padding: 10px 0;
+}
+
+header h1 {
+  font-size: 1rem;
+}
+
+header > * {
+  display: inline;
+}
+
+.game-container {
+  display: grid;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+#color-menu {
+  align-items: center;
+  background-color: #333;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+}
+
+#color-menu kbd {
+  align-items: center;
+  background-color: #151515;
+  border-bottom: 2px solid hsla(0, 0%, 0%, 30%);
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  font-family: inherit;
+  height: 30px;
+  padding: 0 8px;
+}
+
 body[data-active-color="0"] [data-color-key="0"],
 body[data-active-color="1"] [data-color-key="1"],
 body[data-active-color="r"] [data-color-key="r"],
@@ -12,22 +53,19 @@ body[data-active-color="y"] [data-color-key="y"],
 body[data-active-color="g"] [data-color-key="g"],
 body[data-active-color="b"] [data-color-key="b"],
 body[data-active-color="p"] [data-color-key="p"] {
-  border-bottom-width: 2px !important;
-  transform: scale(1.2);
-  box-shadow: 0 0 8px hsla(0, 0%, 0%, 75%);
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px hsla(0, 0%, 0%, 80%);
 }
 
 #color-menu [data-color-key] {
   align-items: center;
-  border: 2px solid hsla(0, 0%, 0%, 50%);
-  border-bottom-width: 4px;
-  border-radius: 4px;
+  border-radius: 40px;
   display: inline-flex;
   font-weight: bold;
-  height: 40px;
+  height: 30px;
   justify-content: center;
   text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.5);
-  width: 40px;
+  width: 30px;
 }
 
 #color-menu [data-color-key="1"] {
@@ -37,7 +75,11 @@ body[data-active-color="p"] [data-color-key="p"] {
 }
 
 #game {
+  border: 2px solid #333;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
   display: grid;
+  padding: 2px;
 }
 
 #game .coordinate {
@@ -46,9 +88,8 @@ body[data-active-color="p"] [data-color-key="p"] {
   justify-content: center;
 }
 
-
 [data-parrot] {
-  background-image: url('./parrot.png');
+  background-image: url("./parrot.png");
   background-position: center;
   background-size: 67%;
   background-repeat: no-repeat;
