@@ -45,3 +45,11 @@ body[data-active-color="p"] [data-color-key="p"] {
   display: flex;
   justify-content: center;
 }
+
+
+[data-parrot] {
+  background-image: url('./parrot.png');
+  background-position: center;
+  background-size: 67%;
+  background-repeat: no-repeat;
+}

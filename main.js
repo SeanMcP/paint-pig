@@ -37,7 +37,8 @@
       const coordinates = [x, y].join(",");
       const element = document.createElement("div");
       element.classList.add("coordinate");
-      if (coordinates === POSITION.join(",")) element.textContent = "🦜";
+      if (coordinates === POSITION.join(","))
+        /* element.textContent = "🦜" */ element.dataset.parrot = true;
       MAP[coordinates] = {
         blend: 0,
         hsl: "0, 0%, 100%",
@@ -61,10 +62,12 @@
     }
     prevPosition = [...POSITION];
 
-    MAP[prevPosition.join(",")].element.textContent = "";
+    // MAP[prevPosition.join(",")].element.textContent = "";
+    delete MAP[prevPosition.join(",")].element.dataset.parrot;
 
     const next = MAP[nextPosition.join(",")];
-    next.element.textContent = "🦜";
+    // next.element.textContent = "🦜";
+    next.element.dataset.parrot = true;
     if (color) {
       next.blend++;
       const hsl = blendColors(next.hsl, color);
