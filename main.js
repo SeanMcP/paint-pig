@@ -3,7 +3,7 @@
   const gameEl = document.getElementById("game");
 
   const COLORS = {
-    r: "0, 100%, 50%",
+    r: "360, 100%, 50%", // To differentiate red from black/white
     o: "39, 100%, 50%",
     y: "60, 100%, 50%",
     g: "120, 100%, 25%",
@@ -94,7 +94,12 @@
     const color2 = hslStringToArray(c2);
 
     return [
-      mean(color1[0], color2[0]),
+      // Only blend hue if both values are not 0
+      color1[0] !== 0 && color2[0] !== 0
+        ? mean(color1[0], color2[0])
+        : color1[0] === 0
+        ? color2[0]
+        : color1[0],
       mean(color1[1], color2[1]) + "%",
       mean(color1[2], color2[2]) + "%",
     ].join(", ");
