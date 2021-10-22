@@ -36,6 +36,12 @@ body[data-active-color="p"] [data-color-key="p"] {
   text-shadow: none;
 }
 
-/* #color-menu * + * {
-  margin-left: 2px;
-} */
+#game {
+  display: grid;
+}
+
+#game .coordinate {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}

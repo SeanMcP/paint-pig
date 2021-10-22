@@ -1,5 +1,6 @@
 (function main() {
   const colorMenu = document.getElementById("color-menu");
+  const gameEl = document.getElementById("game");
 
   const COLORS = {
     r: "0, 100%, 50%",
@@ -9,16 +10,95 @@
     b: "240, 100%, 50%",
     p: "300, 100%, 25%",
     0: "0, 0%, 100%",
-    1: "0, 0%, 0%"
+    1: "0, 0%, 0%",
   };
+  const MAP = {};
+  const MAX = {
+    x: 17,
+    y: 9,
+  };
+  const POSITION = [Math.floor(MAX.x / 2), Math.floor(MAX.y / 2)];
+  let prevPosition;
   let color = null;
 
+  // Begin setup
   colorMenu.innerHTML += Object.entries(COLORS).reduce((acc, [key, value]) => {
     return (
       acc +
       `<div data-color-key="${key}" style="background-color:hsl(${value})">${key}</div>`
     );
   }, "");
+
+  gameEl.style.gridTemplateColumns = `repeat(${MAX.x}, 40px)`;
+  gameEl.style.gridTemplateRows = `repeat(${MAX.y}, 40px)`;
+
+  for (let y = MAX.y - 1; y >= 0; y--) {
+    for (let x = 0; x < MAX.x; x++) {
+      const coordinates = [x, y].join(",");
+      const element = document.createElement("div");
+      element.classList.add("coordinate");
+      if (coordinates === POSITION.join(",")) element.textContent = "🦜";
+      MAP[coordinates] = {
+        blend: 0,
+        hsl: "0, 0%, 100%",
+        element,
+      };
+      gameEl.appendChild(element);
+    }
+  }
+  // End setup
+
+  function move(x = 0, y = 0) {
+    const nextPosition = [POSITION[0] + x, POSITION[1] + y];
+
+    if (
+      nextPosition[0] < 0 ||
+      nextPosition[0] >= MAX.x ||
+      nextPosition[1] < 0 ||
+      nextPosition[1] >= MAX.y
+    ) {
+      return;
+    }
+    prevPosition = [...POSITION];
+
+    MAP[prevPosition.join(",")].element.textContent = "";
+
+    const next = MAP[nextPosition.join(",")];
+    next.element.textContent = "🦜";
+    if (color) {
+      next.blend++;
+      const hsl = blendColors(next.hsl, color);
+      next.hsl = hsl;
+      next.element.style.backgroundColor = `hsl(${hsl})`;
+    }
+    POSITION[0] = nextPosition[0];
+    POSITION[1] = nextPosition[1];
+  }
+
+  function hslStringToArray(string) {
+    const values = string.includes("hsl")
+      ? string.slice(3, string.length - 1)
+      : string;
+    return values
+      .replace(/%/g, "")
+      .split(", ")
+      .map((fragment) => Number(fragment));
+  }
+
+  function mean(a, b) {
+    return Math.ceil((a + b) / 2);
+  }
+
+  function blendColors(c1, c2) {
+    const color1 = hslStringToArray(c1);
+    const color2 = hslStringToArray(c2);
+
+    return [
+      mean(color1[0], color2[0]),
+      mean(color1[1], color2[1]) + "%",
+      mean(color1[2], color2[2]) + "%",
+    ].join(", ");
+  }
 
   function handleKeydown(event) {
     switch (event.key) {
@@ -39,8 +119,23 @@
         delete document.body.dataset.activeColor;
         break;
       }
+      case "ArrowDown": {
+        move(0, -1);
+        break;
+      }
+      case "ArrowLeft": {
+        move(-1, 0);
+        break;
+      }
+      case "ArrowRight": {
+        move(1, 0);
+        break;
+      }
+      case "ArrowUp": {
+        move(0, 1);
+        break;
+      }
     }
-    console.log({ color });
   }
 
   document.addEventListener("keydown", (event) => {
