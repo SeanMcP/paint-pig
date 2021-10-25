@@ -111,5 +111,6 @@ body[data-active-color="p"] [data-color-key="p"] {
 #game .coordinate {
   align-items: center;
   display: flex;
+  font-size: 30px;
   justify-content: center;
 }
