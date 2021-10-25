@@ -94,21 +94,24 @@
     const color1 = hslStringToArray(c1);
     const color2 = hslStringToArray(c2);
 
-    /**
-     * This isn't quite working, but try to find the better
-     * relationship between two colors by "wrapping around"
-     * 360 degrees.
-     */
-    // if (Math.abs(color2[0] - color1[1]) > 180)
-    //   color1[0] < color2[0] ? (color1[0] += 360) : (color2[0] += 360);
+    if (Math.abs(color2[0] - color1[0]) > 180)
+      color1[0] < color2[0] ? (color1[0] += 360) : (color2[0] += 360);
+
+    let h;
+
+    if (color1[1] === 0 || color2[1] === 0) {
+      // White and black are the only colors with 0% saturation,
+      // so here we know one is black/white. We want to skip
+      // blending and return the hue of the other color.
+      h = color1[1] === 0 ? color2[0] : color1[0];
+    } else {
+      h = mean(color1[0], color2[0]);
+    }
+
+    if (h > 360) h -= 360;
 
     return [
-      // Only blend hue if both values are not 0
-      color1[0] !== 0 && color2[0] !== 0
-        ? mean(color1[0], color2[0])
-        : color1[0] === 0
-        ? color2[0]
-        : color1[0],
+      h,
       mean(color1[1], color2[1]) + "%",
       mean(color1[2], color2[2]) + "%",
     ].join(", ");
