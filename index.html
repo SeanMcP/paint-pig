@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paint Pig</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐷</text></svg>">
-    <meta name="description" content="A painting activity to help young children practice using the keyboard.">
-    <link rel="stylesheet" href="./styles.css">
-</head>
-<body>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐷</text></svg>"
+    />
+    <meta
+      name="description"
+      content="A painting activity to help young children practice using the keyboard."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Paint Pig:</h1>
-        <p>Use the arrow keys to help the pig paint a picture</p>
+      <h1>Paint Pig:</h1>
+      <p>Use the arrow keys to help the pig paint a picture</p>
     </header>
     <div class="game-container">
-        <div id="color-menu"><kbd>esc</kbd></div>
-        <div id="game"></div>
+      <div class="toolbar">
+        <kbd>esc</kbd>
+        <div id="color-menu"></div>
+        <div id="active-color"></div>
+      </div>
+      <div id="game"></div>
     </div>
     <script src="./main.js" type="module"></script>
-</body>
+  </body>
 </html>

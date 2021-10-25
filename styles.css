@@ -1,3 +1,12 @@
+:root {
+  --red: hsl(4, 100%, 59%);
+  --orange: hsl(35, 100%, 50%);
+  --yellow: hsl(48, 100%, 50%);
+  --green: hsl(130, 69%, 48%);
+  --blue: hsl(211, 100%, 50%);
+  --violet: hsl(280, 68%, 60%);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -23,17 +32,19 @@ header > * {
   margin: 0 auto;
 }
 
-#color-menu {
+.toolbar {
+  --button-size: 40px;
+  --button-border: 1px solid hsla(0, 0%, 0%, 50%);
   align-items: center;
   background-color: #333;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  padding: 4px;
   display: flex;
   gap: 4px;
+  padding: 4px;
 }
 
-#color-menu kbd {
+.toolbar kbd {
   align-items: center;
   background-color: #151515;
   border-bottom: 2px solid hsla(0, 0%, 0%, 30%);
@@ -41,8 +52,14 @@ header > * {
   color: white;
   display: flex;
   font-family: inherit;
-  height: 30px;
-  padding: 0 8px;
+  height: var(--button-size);
+  padding: 0 16px;
+}
+
+#color-menu {
+  align-items: center;
+  display: flex;
+  gap: 4px;
 }
 
 body[data-active-color="0"] [data-color-key="0"],
@@ -59,19 +76,28 @@ body[data-active-color="p"] [data-color-key="p"] {
 
 #color-menu [data-color-key] {
   align-items: center;
-  border-radius: 40px;
+  border: var(--button-border);
+  border-radius: 2px;
   display: inline-flex;
   font-weight: bold;
-  height: 30px;
+  height: var(--button-size);
   justify-content: center;
   text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.5);
-  width: 30px;
+  width: var(--button-size);
 }
 
 #color-menu [data-color-key="1"] {
-  border-color: hsla(0, 0%, 100%, 30%);
+  border-color: hsla(0, 0%, 100%, 20%);
   color: white;
   text-shadow: none;
+}
+
+#active-color {
+  margin-left: auto;
+  border: var(--button-border);
+  border-radius: 2px;
+  height: var(--button-size);
+  width: var(--button-size);
 }
 
 #game {

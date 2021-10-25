@@ -1,14 +1,15 @@
 (function main() {
+  const activeColor = document.getElementById("active-color");
   const colorMenu = document.getElementById("color-menu");
   const gameEl = document.getElementById("game");
 
   const COLORS = {
-    r: "360, 100%, 50%", // To differentiate red from black/white
-    o: "39, 100%, 50%",
-    y: "60, 100%, 50%",
-    g: "120, 100%, 25%",
-    b: "240, 100%, 50%",
-    p: "300, 100%, 25%",
+    r: "4, 100%, 59%",
+    o: "35, 100%, 50%",
+    y: "48, 100%, 50%",
+    g: "130, 69%, 48%",
+    b: "211, 100%, 50%",
+    v: "280, 68%, 60%",
     0: "0, 0%, 100%",
     1: "0, 0%, 0%",
   };
@@ -37,8 +38,7 @@
       const coordinates = [x, y].join(",");
       const element = document.createElement("div");
       element.classList.add("coordinate");
-      if (coordinates === POSITION.join(","))
-      element.textContent = "🐷"
+      if (coordinates === POSITION.join(",")) element.textContent = "🐷";
       MAP[coordinates] = {
         blend: 0,
         hsl: "0, 0%, 100%",
@@ -94,6 +94,14 @@
     const color1 = hslStringToArray(c1);
     const color2 = hslStringToArray(c2);
 
+    /**
+     * This isn't quite working, but try to find the better
+     * relationship between two colors by "wrapping around"
+     * 360 degrees.
+     */
+    // if (Math.abs(color2[0] - color1[1]) > 180)
+    //   color1[0] < color2[0] ? (color1[0] += 360) : (color2[0] += 360);
+
     return [
       // Only blend hue if both values are not 0
       color1[0] !== 0 && color2[0] !== 0
@@ -115,15 +123,17 @@
       case "y":
       case "g":
       case "b":
-      case "p": {
+      case "v": {
         event.preventDefault();
         color = COLORS[event.key];
         document.body.dataset.activeColor = event.key;
+        activeColor.style.backgroundColor = `hsl(${color})`;
         break;
       }
       case "Escape": {
         event.preventDefault();
         color = null;
+        activeColor.style.backgroundColor = "transparent";
         delete document.body.dataset.activeColor;
         break;
       }
@@ -165,6 +175,7 @@
     });
 
     color = null;
+    activeColor.style.backgroundColor = "transparent";
     delete document.body.dataset.activeColor;
     prevPosition = null;
   }
