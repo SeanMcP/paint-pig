@@ -13,7 +13,8 @@
     0: "0, 0%, 100%",
     1: "0, 0%, 0%",
   };
-  const MAP = {};
+  // Writable for applying saves from local storage
+  let MAP = {};
   const MAX = {
     x: 17,
     y: 9,
@@ -37,10 +38,9 @@
     for (let x = 0; x < MAX.x; x++) {
       const coordinates = [x, y].join(",");
       const element = document.createElement("div");
-      element.classList.add("coordinate");
+      element.dataset.coordinates = coordinates;
       if (coordinates === POSITION.join(",")) element.textContent = "🐷";
       MAP[coordinates] = {
-        blend: 0,
         hsl: "0, 0%, 100%",
         element,
       };
@@ -67,7 +67,6 @@
     const next = MAP[nextPosition.join(",")];
     next.element.textContent = "🐷";
     if (color) {
-      next.blend++;
       const hsl = blendColors(next.hsl, color);
       next.hsl = hsl;
       next.element.style.backgroundColor = `hsl(${hsl})`;
@@ -118,6 +117,10 @@
   }
 
   function handleKeydown(event) {
+    document
+      .querySelectorAll(".active")
+      .forEach((el) => el.classList.remove("active"));
+
     switch (event.key) {
       case "0":
       case "1":
@@ -165,13 +168,111 @@
         reset();
         break;
       }
+      case "s": {
+        if (event.ctrlKey || event.metaKey) {
+          event.preventDefault();
+          save();
+        }
+        break;
+      }
+      case "j":
+      case "k":
+      case "l": {
+        event.preventDefault();
+        applySave(["j", "k", "l"].indexOf(event.key));
+      }
     }
   }
+
+  // Saves
+
+  const saveKey = "paint-pig.saves";
+
+  function applySave(i) {
+    const data = JSON.parse(localStorage.getItem(saveKey), "[]");
+    const save = data[i];
+    const nextMAP = {};
+    if (!save) return;
+    const coordinatesEls = document.querySelectorAll("[data-coordinates]");
+    coordinatesEls.forEach((el) => {
+      const coordinates = el.dataset.coordinates;
+      const hsl = save[coordinates];
+      el.style.backgroundColor = `hsl(${hsl})`;
+      nextMAP[coordinates] = {
+        hsl,
+        element: el,
+      };
+    });
+
+    MAP = nextMAP;
+
+    const saveEl = document.querySelector(`[data-save="${i}"]`);
+    saveEl.classList.add("active");
+  }
+
+  function getSaveColorHSL(data) {
+    let count = 0;
+    const hsl = [0, 0, 0];
+    Object.values(data).forEach((hslString) => {
+      const [h, s, l] = hslString
+        .replace(/%/g, "")
+        .split(", ")
+        .map((s) => parseFloat(s));
+      if (h !== 0 && s !== 100) {
+        count++;
+        hsl[0] += h;
+        hsl[1] += s;
+        hsl[2] += l;
+      }
+    });
+
+    return `hsl(${hsl[0] / count}, ${hsl[1] / count}%, ${hsl[2] / count}%)`;
+  }
+
+  function renderSaves() {
+    const data = JSON.parse(localStorage.getItem(saveKey) || "[]");
+    const container = document.getElementById("saves");
+    if (!data.length) {
+      return (container.textContent = "No saves");
+    }
+    let html = "<b>Saves</b>";
+    data.forEach((saveData, i) => {
+      html += `<button aria-label="Apply save ${
+        i + 1
+      }}" data-save="${i}" style="background-color: ${getSaveColorHSL(
+        saveData
+      )}; opacity: ${100 - 25 * i}%">${["j", "k", "l"][i]}</button>`;
+    });
+    container.innerHTML = html;
+  }
+
+  function save() {
+    const data = Object.entries(MAP).reduce((acc, [key, value]) => {
+      acc[key] = value.hsl;
+      return acc;
+    }, {});
+    const nextSave = [
+      data,
+      ...JSON.parse(localStorage.getItem(saveKey) || "[]"),
+    ].slice(0, 3);
+    localStorage.setItem(saveKey, JSON.stringify(nextSave));
+    renderSaves();
+  }
+
+  document.addEventListener("click", (event) => {
+    if (event.target.dataset.save) {
+      event.preventDefault();
+      applySave(Number(event.target.dataset.save));
+    }
+  });
+
+  renderSaves();
+
+  // Reset
 
   function reset() {
     Object.values(MAP).forEach((cell) => {
       if (cell.hsl) {
-        cell.blend = 0;
         cell.hsl = "0, 0%, 100%";
         cell.element.style.backgroundColor = `hsl(${cell.hsl})`;
       }
