@@ -117,6 +117,8 @@
   }
 
   function handleKeydown(event) {
+    // Save buttons are activated when the save is applied, so we remove that on
+    // the next interaction.
     document
       .querySelectorAll(".active")
       .forEach((el) => el.classList.remove("active"));
@@ -169,6 +171,10 @@
         break;
       }
       case "s": {
+        // There is probably a clever way to handle Mac/Windows here, but this
+        // seemed the easiest option.
+        // For the record, this will be true for ctrl+s on Mac and windows+s on
+        // Windows.
         if (event.ctrlKey || event.metaKey) {
           event.preventDefault();
           save();
@@ -187,13 +193,14 @@
   // Saves
 
   const saveKey = "paint-pig.saves";
+  const coordinatesEls = document.querySelectorAll("[data-coordinates]");
+  const savesContainerEl = document.getElementById("saves");
 
   function applySave(i) {
     const data = JSON.parse(localStorage.getItem(saveKey), "[]");
     const save = data[i];
-    const nextMAP = {};
     if (!save) return;
-    const coordinatesEls = document.querySelectorAll("[data-coordinates]");
+    const nextMAP = {};
     coordinatesEls.forEach((el) => {
       const coordinates = el.dataset.coordinates;
       const hsl = save[coordinates];
@@ -218,6 +225,7 @@
         .replace(/%/g, "")
         .split(", ")
         .map((s) => parseFloat(s));
+      // Ignore white when calculating the average.
       if (h !== 0 && s !== 100) {
         count++;
         hsl[0] += h;
@@ -231,19 +239,18 @@
 
   function renderSaves() {
     const data = JSON.parse(localStorage.getItem(saveKey) || "[]");
-    const container = document.getElementById("saves");
     if (!data.length) {
-      return (container.textContent = "No saves");
+      return (savesContainerEl.textContent = "No saves");
     }
     let html = "<b>Saves</b>";
     data.forEach((saveData, i) => {
-      html += `<button aria-label="Apply save ${
+      html += `<span aria-label="Apply save ${
         i + 1
       }}" data-save="${i}" style="background-color: ${getSaveColorHSL(
         saveData
-      )}; opacity: ${100 - 25 * i}%">${["j", "k", "l"][i]}</button>`;
+      )}; opacity: ${100 - 25 * i}%">${["j", "k", "l"][i]}</span>`;
     });
-    container.innerHTML = html;
+    savesContainerEl.innerHTML = html;
   }
 
   function save() {
@@ -258,13 +265,6 @@
     localStorage.setItem(saveKey, JSON.stringify(nextSave));
     renderSaves();
   }
-
-  document.addEventListener("click", (event) => {
-    if (event.target.dataset.save) {
-      event.preventDefault();
-      applySave(Number(event.target.dataset.save));
-    }
-  });
 
   renderSaves();
 
