@@ -22,6 +22,8 @@
   const POSITION = [Math.floor(MAX.x / 2), Math.floor(MAX.y / 2)];
   let prevPosition;
   let color = null;
+  // Prevents spam saving. Disabled on save and re-enabled on color.
+  let isSaveableState = true;
 
   // Begin setup
   colorMenu.innerHTML += Object.entries(COLORS).reduce((acc, [key, value]) => {
@@ -70,6 +72,7 @@
       const hsl = blendColors(next.hsl, color);
       next.hsl = hsl;
       next.element.style.backgroundColor = `hsl(${hsl})`;
+      isSaveableState = true;
     }
     POSITION[0] = nextPosition[0];
     POSITION[1] = nextPosition[1];
@@ -177,7 +180,10 @@
         // Windows.
         if (event.ctrlKey || event.metaKey) {
           event.preventDefault();
-          save();
+          if (isSaveableState) {
+            save();
+            isSaveableState = false;
+          }
         }
         break;
       }
