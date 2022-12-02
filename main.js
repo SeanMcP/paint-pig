@@ -3,6 +3,8 @@
   const colorMenu = document.getElementById("color-menu");
   const gameEl = document.getElementById("game");
 
+  const IS_MAC = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+
   const COLORS = {
     r: "4, 100%, 59%",
     o: "35, 100%, 50%",
@@ -246,7 +248,10 @@
   function renderSaves() {
     const data = JSON.parse(localStorage.getItem(saveKey) || "[]");
     if (!data.length) {
-      return (savesContainerEl.textContent = "No saves");
+      savesContainerEl.innerHTML = `<b>Save</b><kbd>${
+        IS_MAC ? "⌘" : "ctrl"
+      }</kbd><kbd>s</kbd>`;
+      return;
     }
     let html = "<b>Saves</b>";
     data.forEach((saveData, i) => {

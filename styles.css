@@ -45,7 +45,7 @@ header > * {
   padding: 4px;
 }
 
-.toolbar kbd {
+kbd {
   align-items: center;
   background-color: #151515;
   border-bottom: 2px solid hsla(0, 0%, 0%, 30%);
@@ -53,6 +53,9 @@ header > * {
   color: white;
   display: flex;
   font-family: inherit;
+}
+
+.toolbar kbd {
   height: var(--button-size);
   padding: 0 16px;
 }
@@ -125,4 +128,10 @@ body[data-active-color="p"] [data-color-key="p"],
   height: var(--button-size);
   justify-content: flex-end;
   padding-top: 4px;
+}
+
+#saves kbd {
+  background-color: #333;
+  height: 2rem;
+  padding: 0 0.75rem;
 }
